@@ -28,27 +28,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * ProjectProperties wraps project properties 
- * to open the file and return properties. 
- * It first look in System property for 
- * "conf" variable, then it looks for FILE_PROPERTY	
- * in the current directory. You can also open them giving
- * a Reader or a file name. 
+ * ProjectProperties wraps project properties to open the file and return
+ * properties. It first look in System property for "conf" variable, then it
+ * looks for FILE_PROPERTY in the current directory. You can also open them
+ * giving a Reader or a file name.
  * 
- *
- * @author Diego Ceccarelli, diego.ceccarelli@isti.cnr.it
- * created on 02/lug/2012
+ * 
+ * @author Diego Ceccarelli, diego.ceccarelli@isti.cnr.it created on 02/lug/2012
  */
 public class ProjectProperties {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(ProjectProperties.class);	
-	private Properties properties = new Properties();
-	
-	
-	/** 
-	 * The default property file 
+	private static final Logger logger = LoggerFactory
+			.getLogger(ProjectProperties.class);
+	private static Properties properties = new Properties();
+	private static boolean loaded = false;
+
+	/**
+	 * The default property file
 	 * 
 	 **/
 	public final static String DEFAULT_NAME = "project.properties";
@@ -56,166 +54,199 @@ public class ProjectProperties {
 	 * System property
 	 */
 	public final static String SYSTEM_PROPERTY = "conf";
-	
-	
+
 	/**
 	 * Loads the properties
-	 * @param file the property file
+	 * 
+	 * @param file
+	 *            the property file
 	 */
-	public ProjectProperties(String file){
+	public ProjectProperties(String file) {
 		this(new File(file));
 	}
+
 	/**
 	 * Loads the properties from the resources.
-	 * @param clazz the current class
+	 * 
+	 * @param clazz
+	 *            the current class
 	 */
-	public ProjectProperties(Class clazz){
-		
-		this(clazz.getResourceAsStream("/"+DEFAULT_NAME));
+	public ProjectProperties(Class clazz) {
+
+		this(clazz.getResourceAsStream("/" + DEFAULT_NAME));
 	}
-	
+
 	/**
 	 * Loads the properties
-	 * @param file the property file
+	 * 
+	 * @param file
+	 *            the property file
 	 */
-	public ProjectProperties(File file){
+	public ProjectProperties(File file) {
 		load(file);
 	}
-	
+
 	/**
 	 * Gets a property
-	 * @param key the property key.
+	 * 
+	 * @param key
+	 *            the property key.
 	 */
-	public String get(String key){
+	public String get(String key) {
 		String value = properties.getProperty(key);
-		logger.debug("load property {} = {}",key , value);
+		logger.debug("load property {} = {}", key, value);
 		return value;
 	}
-	
+
 	/**
 	 * Gets a int property
-	 * @param key the property key.
+	 * 
+	 * @param key
+	 *            the property key.
 	 */
-	public int getInt(String key){
+	public int getInt(String key) {
 		String value = properties.getProperty(key);
-		logger.debug("load property {} = {}",key , value);
+		logger.debug("load property {} = {}", key, value);
 		return Integer.parseInt(value);
 	}
-	
+
 	/**
 	 * Gets a int property
-	 * @param key the property key.
+	 * 
+	 * @param key
+	 *            the property key.
 	 */
-	public double getDouble(String key){
+	public double getDouble(String key) {
 		String value = properties.getProperty(key);
-		logger.debug("load property {} = {}",key , value);
+		logger.debug("load property {} = {}", key, value);
 		return Double.parseDouble(value);
 	}
-	
+
 	/**
 	 * Gets a boolean property
-	 * @param key the property key.
+	 * 
+	 * @param key
+	 *            the property key.
 	 */
-	public boolean is(String key){
+	public boolean is(String key) {
 		String value = properties.getProperty(key).toLowerCase();
-		if (value.contains("true")) return true;
+		if (value.contains("true"))
+			return true;
 		return false;
 	}
-	
-	
+
 	/**
 	 * Checks if the a property is defined
-	 * @param key the property to check
+	 * 
+	 * @param key
+	 *            the property to check
 	 * @return true if the property is defined, false otherwise
 	 */
-	public boolean has(String key){
+	public boolean has(String key) {
 		return properties.containsKey(key);
 	}
-	
+
 	/**
-	 * Sets a property 
-	 * @param key the property name 
-	 * @param value the property value
+	 * Sets a property
+	 * 
+	 * @param key
+	 *            the property name
+	 * @param value
+	 *            the property value
 	 */
-	public void set(String key, String value){
+	public void set(String key, String value) {
 		properties.setProperty(key, value);
 	}
-	
+
 	/**
 	 * Loads the properties
-	 * @param is the property file
+	 * 
+	 * @param is
+	 *            the property file
 	 */
-	public ProjectProperties(InputStream is){
+	public ProjectProperties(InputStream is) {
+		if (loaded) {
+			try {
+				is.close();
+			} catch (IOException e) {
+				logger.error("opening properties {}", e.toString());
+				System.exit(-1);
+			}
+			return;
+		}
 		String file = System.getProperty(SYSTEM_PROPERTY);
 		if (file == null) {
-			file = "./"+DEFAULT_NAME;
+			file = "./" + DEFAULT_NAME;
 		}
 		File f = new File(file);
-		
-		if (f.exists()){
-			logger.info("using property file in {}",f.getPath());
+
+		if (f.exists()) {
+			logger.info("using property file in {}", f.getPath());
 			load(f);
 			return;
 		} else {
-			logger.warn("cannot find file {}",f.getAbsoluteFile());
+			logger.warn("cannot find file {}", f.getAbsoluteFile());
 		}
 		logger.info("using default property file ");
 		load(is);
 	}
-	
-	/**
-	 * Loads the properties
-	 * @param reader the property file
-	 */
-	public ProjectProperties(Reader reader){
-		load(reader);
-	}
-	
 
 	/**
 	 * Loads the properties
-	 * @param file the property file
+	 * 
+	 * @param reader
+	 *            the property file
 	 */
-	private void load(File file){
-		if (!file.exists()){
-			logger.error("cannot find property file {}",file.getAbsolutePath());
+	public ProjectProperties(Reader reader) {
+		load(reader);
+	}
+
+	/**
+	 * Loads the properties
+	 * 
+	 * @param file
+	 *            the property file
+	 */
+	private void load(File file) {
+		if (!file.exists()) {
+			logger.error("cannot find property file {}", file.getAbsolutePath());
 			System.exit(1);
 		}
 		try {
-			logger.debug("load property file {}",file);
-			load( new InputStreamReader(new FileInputStream(file)));
+			logger.debug("load property file {}", file);
+			load(new InputStreamReader(new FileInputStream(file)));
 		} catch (FileNotFoundException e1) {
-			logger.warn("cannot load properties ({})",e1.toString());
+			logger.warn("cannot load properties ({})", e1.toString());
 			System.exit(1);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Loads the properties
-	 * @param is the property file
+	 * 
+	 * @param is
+	 *            the property file
 	 */
-	private void load(InputStream is){
+	private void load(InputStream is) {
 		load(new InputStreamReader(is));
 	}
-	
-	
+
 	/**
 	 * Loads the properties
-	 * @param reader the property file
+	 * 
+	 * @param reader
+	 *            the property file
 	 */
-	private void load(Reader reader){
+	private void load(Reader reader) {
+
+		loaded = false;
 		try {
 			properties.load(reader);
 		} catch (IOException e) {
-			logger.warn("cannot load properties ({})",e.toString());
+			logger.warn("cannot load properties ({})", e.toString());
 			System.exit(1);
 		}
 	}
-	
-	
-	
-	
-	
 
 }
