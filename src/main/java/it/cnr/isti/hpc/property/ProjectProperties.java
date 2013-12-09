@@ -240,7 +240,7 @@ public class ProjectProperties {
 	 */
 	private void load(Reader reader) {
 
-		loaded = false;
+		loaded = true;
 		try {
 			properties.load(reader);
 		} catch (IOException e) {
