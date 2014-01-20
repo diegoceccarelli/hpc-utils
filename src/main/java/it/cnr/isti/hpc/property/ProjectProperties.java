@@ -165,15 +165,7 @@ public class ProjectProperties {
 	 *            the property file
 	 */
 	public ProjectProperties(InputStream is) {
-		if (loaded) {
-			try {
-				is.close();
-			} catch (IOException e) {
-				logger.error("opening properties {}", e.toString());
-				System.exit(-1);
-			}
-			return;
-		}
+
 		String file = System.getProperty(SYSTEM_PROPERTY);
 		if (file == null) {
 			file = "./" + DEFAULT_NAME;

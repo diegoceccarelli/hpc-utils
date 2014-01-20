@@ -39,7 +39,9 @@ public class TsvTuple {
 
 	/**
 	 * Gets a value.
-	 * @param key the symbolic name.
+	 * 
+	 * @param key
+	 *            the symbolic name.
 	 * @return the value associated with the symbolic name.
 	 */
 	public String get(String key) {
@@ -48,16 +50,22 @@ public class TsvTuple {
 
 	/**
 	 * Gets an int value.
-	 * @param key the symbolic name.
+	 * 
+	 * @param key
+	 *            the symbolic name.
 	 * @return the value associated with the symbolic name.
 	 */
 	public Integer getInt(String key) {
 		return Integer.parseInt(tuple.get(key));
 	}
+
 	/**
 	 * Set a value
-	 * @param key the symbolic name.
-	 * @param value associated with the symbolic name.
+	 * 
+	 * @param key
+	 *            the symbolic name.
+	 * @param value
+	 *            associated with the symbolic name.
 	 */
 	public void put(String key, String value) {
 		tuple.put(key, value);
@@ -65,11 +73,18 @@ public class TsvTuple {
 
 	/**
 	 * Gets an double value.
-	 * @param key the symbolic name.
+	 * 
+	 * @param key
+	 *            the symbolic name.
 	 * @return the value associated with the symbolic name.
 	 */
 	public Double getDouble(String key) {
 		return Double.parseDouble(tuple.get(key));
+	}
+
+	@Override
+	public String toString() {
+		return "TsvTuple [tuple=" + tuple + "]";
 	}
 
 }
