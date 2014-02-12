@@ -18,8 +18,8 @@ package it.cnr.isti.hpc.io.reader;
 import java.util.Scanner;
 
 /**
- * A Tab Separated Values file reader {@link RecordParser}, serializes and deserializes an 
- * object E to tsv string.
+ * A Tab Separated Values file reader {@link RecordParser}, serializes and
+ * deserializes an object E to tsv string.
  * 
  * 
  * @see RecordParser
@@ -31,27 +31,34 @@ import java.util.Scanner;
  */
 public class TsvRecordParser implements RecordParser<TsvTuple> {
 
-	private String[] fields;
+	private final String[] fields;
 	private String delimiter = "\t";
 	StringBuilder sb = new StringBuilder();
 
 	/**
 	 * Creates a Tsv Record Reader, reading a list of fields separated by the
 	 * delimeter symbol.
-	 * @param fields the symbolic names of the fields, ordered. Each line will be split
-	 * on the delimiter symbol (tab) and each element will be assigned to the corresponding 
-	 * symbolic name 
+	 * 
+	 * @param fields
+	 *            the symbolic names of the fields, ordered. Each line will be
+	 *            split on the delimiter symbol (tab) and each element will be
+	 *            assigned to the corresponding symbolic name
 	 */
 	public TsvRecordParser(String... fields) {
 		this.fields = fields;
+	}
+
+	public TsvRecordParser setDelimiter(String delimiter) {
+		this.delimiter = delimiter;
+		return this;
 	}
 
 	@Override
 	public TsvTuple decode(String record) {
 		Scanner scanner = new Scanner(record).useDelimiter(delimiter);
 		TsvTuple tuple = new TsvTuple();
-		for (String f : fields){
-			tuple.put(f,scanner.next());
+		for (String f : fields) {
+			tuple.put(f, scanner.next());
 		}
 		return tuple;
 	}
@@ -59,13 +66,11 @@ public class TsvRecordParser implements RecordParser<TsvTuple> {
 	@Override
 	public String encode(TsvTuple tuple) {
 		sb.setLength(0);
-		for (String f : fields){
+		for (String f : fields) {
 			sb.append(tuple.get(f)).append("\t");
 		}
-		sb.setLength(sb.length()-1);
+		sb.setLength(sb.length() - 1);
 		return sb.toString();
 	}
-
-	
 
 }
