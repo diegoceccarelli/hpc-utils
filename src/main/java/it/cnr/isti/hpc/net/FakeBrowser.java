@@ -15,7 +15,10 @@
  */
 package it.cnr.isti.hpc.net;
 
+import it.cnr.isti.hpc.io.IOUtils;
+
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -119,7 +122,7 @@ public class FakeBrowser {
 	 *             if an errors occurs during the fetching.
 	 */
 	public Reader fetchUTF8(String url) throws IOException {
-		return fetch(new URL(url));
+		return fetchUTF8(new URL(url));
 	}
 
 	/**
@@ -157,6 +160,18 @@ public class FakeBrowser {
 		}
 		return sb.toString();
 
+	}
+
+	public static void main(String[] args) throws IOException {
+		FakeBrowser fb = new FakeBrowser();
+		System.out
+				.println(fb
+						.fetchAsUTF8String("http://node5.novello.isti.cnr.it:8080/dexter-webapp/api/rest/get-desc?id=2982390&title-only=false"));
+		BufferedWriter wr = IOUtils
+				.getPlainOrCompressedUTF8Writer("/tmp/test.json.gz");
+		wr.write(fb
+				.fetchAsUTF8String("http://node5.novello.isti.cnr.it:8080/dexter-webapp/api/rest/get-desc?id=2982390&title-only=false"));
+		wr.close();
 	}
 
 }
