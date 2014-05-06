@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>hpc-utils</artifactId>
 	<groupId>it.cnr.isti.hpc</groupId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 
 	<name>hpc utils</name>
 	<description>contains several utils used in hpc packages</description>
