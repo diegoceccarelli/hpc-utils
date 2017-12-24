@@ -112,7 +112,7 @@ public class Stopwatch {
 	public String stat() {
 		StringBuilder sb = new StringBuilder();
 		for (SingleStopwatch ss : stopwatches) {
-			sb.append(ss.stat()).append("\n");
+			sb.append(ss.stat()).append('\n');
 		}
 		return sb.toString();
 	}
@@ -176,8 +176,12 @@ public class Stopwatch {
 			StringBuilder sb = new StringBuilder();
 			sb.append(name).append(" :");
 			sb.append("time: ").append(total/1000).append(" sec.");
+            
 			sb.append(" (").append(total * 100 / (totalStopwatchesTime)).append("%")
-					.append(")").append("\t per-step: ").append(total / steps).append(" millis");
+					.append(")");
+            if (steps > 0){
+                sb.append("\t per-step: ").append(total / steps).append(" millis");
+            }
 			return sb.toString();
 		}
 
